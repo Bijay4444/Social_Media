@@ -45,7 +45,8 @@ INSTALLED_APPS = [
     'rest_framework',
     'rest_framework.authtoken',
     'crispy_forms',
-    
+    'crispy_bootstrap5',
+
     'allauth',
     'allauth.account',
     'allauth.socialaccount',
@@ -151,13 +152,13 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 REST_FRAMEWORK = {
     'DEFAULT_FILTER_BACKENDS': (
         'django_filters.rest_framework.DjangoFilterBackend',
-    
+
     ),
-    'DEFAULT_AUTHENTICATION_CLASSES':[
-         "rest_framework.authentication.TokenAuthentication"
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        "rest_framework.authentication.TokenAuthentication"
     ],
     'PAGE_SIZE': 10,
-        
+
 }
 
 AUTHENTICATION_BACKENDS = [
@@ -180,12 +181,6 @@ SITE_ID = 1
 #         'AUTH_PARAMS': {
 #             'access_type': 'online',
 #         },
-#         'APP': {
-#             'client_id': '81271771756-qrhmlg289h6o3oesgdl9ski0pmu63jn7.apps.googleusercontent.com',
-#             'secret': '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',
-#             'key': '',
-#         },
-#         'OAUTH2_PROVIDER_NAME': 'google',
 #     }
 # }
 
@@ -195,7 +190,8 @@ SITE_ID = 1
 
 STATIC_URL = '/static/'
 
-CRISPY_TEMPLATE_PACK = 'bootstrap4'
+CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap5"
+CRISPY_TEMPLATE_PACK = "bootstrap5"
 
 LOGIN_REDIRECT_URL = 'index'
 ACCOUNT_EMAIL_REQUIRED = True
