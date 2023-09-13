@@ -12,7 +12,15 @@
       >
         <span class="navbar-toggler-icon"></span>
       </button>
-      <a class="navbar-brand" href="{% url 'index' %}">SMedia</a>
+
+      <a class="navbar-brand"
+      {%if user.is_authenticated%}
+        href="{% url 'post_list' %}"
+      {%else%}
+        href="{% url 'index' %}"
+      {%endif%}
+       ><i class ="fas fa-hashtag"></i> SMedia</a>
+
       <div class="collapse navbar-collapse" id="navbarTogglerDemo03">
         <ul class="navbar-nav me-auto mb-2 mb-lg-0"></ul>
         <form class="d-flex">
