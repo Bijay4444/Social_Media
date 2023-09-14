@@ -11,7 +11,14 @@
 
     <div class="row justify-content-center mt-3">
         <div class="col-md-5 col-sm-12 border-bottom">
-            <p><strong>{{ post.author }}</strong> {{ post.created_at }}</p>
+            <p>
+                <strong>{{ post.author }}</strong> {{ post.created_at }}
+                {% comment %} only the user who posted can edit logic {% endcomment %}
+                {% if request.user == post.author%}
+                    <a href="{% url 'post_edit' post.pk %}" class="btn"><i class="fa-regular fa-pen-to-square"></i></a>
+                    <a href="{% url 'post_delete' post.pk %}" class="btn"><i class="fa-solid fa-trash"></i></a>
+                {% endif %}
+            </p>
             <p>{{ post.content }}</p>
         </div>
     </div>
@@ -28,5 +35,20 @@
         </div>
     </div> 
 
+    {% for comment in comments %}
+    <div class="row justify-content-center mt-3 mb-5 ">
+        <div class="col-md-5 col-sm-12 border-bottom">
+            <p>
+                <strong>{{ comment.author }}</strong> {{ comment.created_at }}
+                   {% comment %} only the user who commented can edit logic {% endcomment %}
+                   {% if request.user == comment.author%}
+                   <a href="{% url 'comment_edit' post.pk comment.pk %}" class="btn"><i class="fa-regular fa-pen-to-square"></i></a>
+                   <a href="{% url 'comment_delete' post.pk comment.pk %}" class="btn"><i class="fa-solid fa-trash"></i></a>
+               {% endif %}
+            </p>
+            <p>{{ comment.content }}</p>
+        </div>
+    </div>
+    {% endfor %}
 </div>
 {% endblock content %}
