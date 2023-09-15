@@ -2,7 +2,7 @@ from django.shortcuts import render, redirect
 from django.urls import reverse_lazy
 from django.contrib.auth.mixins import UserPassesTestMixin, LoginRequiredMixin
 from django.views import View
-from .models import Post, Comment
+from .models import Post, Comment, UserProfile
 from .forms import PostForm, CommentForm
 from django.views.generic import UpdateView, DeleteView
 
@@ -127,3 +127,32 @@ class CommentDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
     def test_func(self):
         post = self.get_object()
         return self.request.user == post.author
+
+# view for showing the profile of a user
+class ProfileView(View):
+    def get(self, request, pk, *args, **kwargs):
+        profile = UserProfile.objects.get(pk=pk)
+        user = profile.user
+        posts = Post.objects.filter(author=user).order_by('-created_at')
+        
+        context = {
+            'user': user,
+            'profile': profile,
+            'posts': posts,
+        }
+        
+        return render(request, 'socialapp/profile.html', context)
+    
+class ProfileEditView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
+    model = UserProfile
+    fields = ['name', 'bio', 'birth_date', 'address', 'profile_pic']
+    template_name = 'socialapp/profile_edit.html'
+    
+    def get_success_url(self):
+        pk = self.kwargs['pk']
+        return reverse_lazy('profile', kwargs={'pk': pk})
+    
+    #function to check if the user is the author of the post
+    def test_func(self):
+        profile = self.get_object()
+        return self.request.user == profile.user
