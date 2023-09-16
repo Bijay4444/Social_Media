@@ -42,15 +42,36 @@
             <p>{{ profile.bio }}</p>
             {% endif %}
 
+            {% comment %} followers template {% endcomment %}
+            <div class="mb-3">
+                <p>Followers: {{ number_of_followers }}</p>
+                {% if user == request.user %}
+                {% else %}
+                {% if is_following %}
+                <form method="POST" action="{% url 'remove_follower' profile.pk %}">
+                    {% csrf_token %}
+                    <button class="btn btn-outline-danger" type="submit">Unfollow</button>
+                </form>
+                {% else %}
+                <form method="POST" action="{% url 'add_follower' profile.pk %}">
+                    {% csrf_token %}
+                    <button class="btn btn-outline-success" type="submit">Follow</button>
+                </form>
+                {% endif %}
+                {% endif %}
+            </div>
         </div>
     </div>
 
     {% for post in posts %}
     <div class="row justify-content-center mt-5">
-        <div class="col-md-8 col-sm-12 border-bottom position-relative">
-            <p><strong>{{ post.author }}</strong> {{ post.created_at }}</p>
-            <p>{{ post.content }}</p>
-            <a href="{% url 'post_detail' post.pk %}" class="stretched-link"> <a/>
+        <div class="col-md-8 col-sm-12 border-bottom">
+            <p><a style="text-decoration:none" class= "text-primary" href = "{% url 'profile' post.author.profile.pk %}"
+                >@{{ post.author }} </a> {{ post.created_at }}</p>
+             <div class="position-relative">   
+                <p>{{ post.content }}</p>
+                <a href="{% url 'post_detail' post.pk %}" class="stretched-link"> <a/>
+            </div>            
         </div>
     </div>
     {% endfor %}
