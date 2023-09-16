@@ -23,6 +23,7 @@ class UserProfile(models.Model):
     birth_date = models.DateField(null=True, blank=True)
     address = models.CharField(max_length=100, blank=True, null=True)
     profile_pic = models.ImageField(upload_to='uploads/profile_pictures', default='uploads/profile_pictures/default.png', blank=True)
+    followers = models.ManyToManyField(User, related_name='followers', blank=True)
 
 # Create a user profile when a new user is created with the help of signals 
 @receiver(post_save, sender=User)
