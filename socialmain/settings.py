@@ -63,8 +63,10 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    # Add the account middleware:
+    # Adding the account middleware:
     "allauth.account.middleware.AccountMiddleware",
+    # Adding the debug toolbar middleware:
+    'debug_toolbar.middleware.DebugToolbarMiddleware',
 ]
 
 ROOT_URLCONF = 'socialmain.urls'
@@ -173,7 +175,6 @@ AUTHENTICATION_BACKENDS = [
 
 SITE_ID = 1
 
-
 # SOCIALACCOUNT_PROVIDERS = {
 #     'google': {
 #         'SCOPE': [
@@ -189,6 +190,13 @@ SITE_ID = 1
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/2.1/howto/static-files/
+
+DEBUG_TOOLBAR_PANELS = [
+    # ...
+    'debug_toolbar.panels.templates.TemplatesPanel',
+    # ...
+]
+
 
 STATIC_URL = '/static/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
