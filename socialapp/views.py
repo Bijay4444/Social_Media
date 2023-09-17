@@ -175,14 +175,14 @@ class ProfileEditView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
     
 #views for follower management
 class AddFollower(LoginRequiredMixin, View):
-    def get(self, request, pk, *args, **kwargs):
+    def post(self, request, pk, *args, **kwargs):
         profile = UserProfile.objects.get(pk=pk)
         profile.followers.add(request.user)
         
         return redirect('profile', pk=profile.pk)
     
 class RemoveFollower(LoginRequiredMixin, View):
-    def get(self, request, pk, *args, **kwargs):
+    def post(self, request, pk, *args, **kwargs):
         profile = UserProfile.objects.get(pk=pk)
         profile.followers.remove(request.user)
         
