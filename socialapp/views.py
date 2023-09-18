@@ -1,5 +1,6 @@
 from django.shortcuts import render, redirect
 from django.urls import reverse_lazy
+from django.http import HttpResponseRedirect
 from django.contrib.auth.mixins import UserPassesTestMixin, LoginRequiredMixin
 from django.views import View
 from .models import Post, Comment, UserProfile
@@ -7,7 +8,6 @@ from .forms import PostForm, CommentForm
 from django.views.generic import UpdateView, DeleteView
 
 # View for the home page showing posts
-
 
 class PostListView(LoginRequiredMixin, View):
     def get(self, request, *args, **kwargs):
@@ -187,3 +187,70 @@ class RemoveFollower(LoginRequiredMixin, View):
         profile.followers.remove(request.user)
         
         return redirect('profile', pk=profile.pk)
+    
+class AddLike(LoginRequiredMixin, View):
+    def post(self, request, pk, *args, **kwargs):
+        post = Post.objects.get(pk=pk)
+
+        # checking if post is already disliked by the user
+        is_dislike = False
+
+        for dislike in post.dislikes.all():
+            if dislike == request.user:
+                is_dislike = True
+                break
+        
+        # removing dislike if already disliked
+        if is_dislike:
+            post.dislikes.remove(request.user)
+
+        # logic for adding like
+        is_like = False
+
+        for like in post.likes.all():
+            if like == request.user:
+                is_like = True
+                break
+
+        if not is_like:
+            post.likes.add(request.user)
+
+        if is_like:
+            post.likes.remove(request.user)
+
+        next = request.POST.get('next', '/')
+        return HttpResponseRedirect(next)
+        
+    
+class AddDislike(LoginRequiredMixin, View):
+    def post(self, request, pk, *args, **kwargs):
+            post = Post.objects.get(pk=pk)
+
+            # checking if post is already liked by the user
+            is_like = False
+
+            for like in post.likes.all():
+                if like == request.user:
+                    is_like = True
+                    break
+            
+            # removing like if already liked
+            if is_like:
+                post.likes.remove(request.user)
+
+            # logic for adding dislike
+            is_dislike = False
+
+            for dislike in post.dislikes.all():
+                if dislike == request.user:
+                    is_dislike = True
+                    break
+
+            if not is_dislike:
+                post.dislikes.add(request.user)
+
+            if is_dislike:
+                post.dislikes.remove(request.user)
+
+            next = request.POST.get('next', '/')
+            return HttpResponseRedirect(next)
