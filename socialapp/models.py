@@ -3,12 +3,15 @@ from django.utils import timezone
 from django.contrib.auth.models import User
 from django.db.models.signals import post_save
 from django.dispatch import receiver
+from django.conf import settings
 
 # Create your models here.
 class Post(models.Model):
     content = models.TextField()
     created_at = models.DateTimeField(default=timezone.now)
     author = models.ForeignKey(User, on_delete=models.CASCADE)
+    likes = models.ManyToManyField(User, related_name='likes', blank=True)
+    dislikes = models.ManyToManyField(User, related_name='dislikes', blank=True)
     
 class Comment(models.Model):
     content = models.TextField()
@@ -24,6 +27,14 @@ class UserProfile(models.Model):
     address = models.CharField(max_length=100, blank=True, null=True)
     profile_pic = models.ImageField(upload_to='uploads/profile_pictures', default='uploads/profile_pictures/default.png', blank=True)
     followers = models.ManyToManyField(User, related_name='followers', blank=True)
+    
+    #function to save profile_pic field with MEDIA_URL
+    def save(self, *args, **kwargs):
+        # Check if the profile_pic field is not empty and doesn't start with MEDIA_URL
+        if self.profile_pic and not self.profile_pic.url.startswith(settings.MEDIA_URL):
+            self.profile_pic = f"{settings.MEDIA_URL}{self.profile_pic}"
+
+        super().save(*args, **kwargs)
 
 # Create a user profile when a new user is created with the help of signals 
 @receiver(post_save, sender=User)
