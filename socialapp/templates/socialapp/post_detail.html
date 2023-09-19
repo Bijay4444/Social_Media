@@ -15,11 +15,29 @@
                 <strong>{{ post.author }}</strong> {{ post.created_at }}
                 {% comment %} only the user who posted can edit logic {% endcomment %}
                 {% if request.user == post.author%}
-                    <a href="{% url 'post_edit' post.pk %}" class="btn"><i class="fa-regular fa-pen-to-square"></i></a>
-                    <a href="{% url 'post_delete' post.pk %}" class="btn"><i class="fa-solid fa-trash"></i></a>
+                    <a href="{% url 'post_edit' post.pk %}" class="btn" class="edit-color"><i class="fa-regular fa-pen-to-square"></i></a>
+                    <a href="{% url 'post_delete' post.pk %}" class="btn" class="edit-color"><i class="fa-solid fa-trash"></i></a>
                 {% endif %}
             </p>
             <p>{{ post.content }}</p>
+
+            <div class="d-flex flex-row">
+                <form method="POST" action="{% url 'like' post.pk %}">
+                    {% csrf_token %}
+                    <input type="hidden" name="next" value="{{ request.path }}">
+                    <button class="remove-default-btn" type="submit">
+                        <i class="far fa-thumbs-up"> <span>{{ post.likes.all.count }}</span></i>
+                    </button>
+                </form>
+
+                <form method="POST" action="{% url 'dislike' post.pk %}">
+                    {% csrf_token %}
+                    <input type="hidden" name="next" value="{{ request.path }}">
+                    <button class="remove-default-btn" type="submit">
+                        <i class="far fa-thumbs-down"> <span>{{ post.dislikes.all.count }}</span></i>
+                    </button>
+                </form>
+            </div>
         </div>
     </div>
 
