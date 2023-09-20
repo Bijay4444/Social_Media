@@ -271,3 +271,15 @@ class UserSearch(View):
         }
         
         return render(request, 'socialapp/search.html', context)
+    
+class ListFollowers(View):
+    def get(self, request, pk, *args, **kwargs):
+        profile = UserProfile.objects.get(pk=pk)
+        followers = profile.followers.all()
+        
+        context = {
+            'profile': profile,
+            'followers': followers,
+        }
+        
+        return render(request, 'socialapp/followers_list.html', context)
