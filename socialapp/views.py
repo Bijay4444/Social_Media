@@ -73,6 +73,21 @@ class PostDetailView(LoginRequiredMixin, View):
 
         return render(request, 'socialapp/post_detail.html', context)
 
+#view for replying to a comment in a post
+class CommentReplyView(LoginRequiredMixin, View):
+    def post(self, request, post_pk, pk, *args, **kwargs):
+        post = Post.objects.get(pk=post_pk)
+        parent_comment = Comment.objects.get(pk=pk)
+        form = CommentForm(request.POST)
+
+        if form.is_valid():
+            new_comment = form.save(commit=False)
+            new_comment.post = post
+            new_comment.author = request.user
+            new_comment.parent = parent_comment
+            new_comment.save()
+
+        return redirect('post_detail', pk=post_pk)
 
 # view for editing a post
 class PostEditView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
@@ -101,6 +116,74 @@ class PostDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
         post = self.get_object()
         return self.request.user == post.author
 
+# view for adding a like to a comment
+class AddCommentLike(LoginRequiredMixin, View):
+    def post(self, request, pk, *args, **kwargs):
+        comment = Comment.objects.get(pk=pk)
+
+        # checking if comment is already disliked by the user
+        is_dislike = False
+
+        for dislike in comment.dislikes.all():
+            if dislike == request.user:
+                is_dislike = True
+                break
+        
+        # removing dislike if already disliked
+        if is_dislike:
+            comment.dislikes.remove(request.user)
+
+        # logic for adding like
+        is_like = False
+
+        for like in comment.likes.all():
+            if like == request.user:
+                is_like = True
+                break
+
+        if not is_like:
+            comment.likes.add(request.user)
+
+        if is_like:
+            comment.likes.remove(request.user)
+
+        next = request.POST.get('next', '/')
+        return HttpResponseRedirect(next)
+        
+
+# view for adding a dislike to a comment
+class AddCommentDislike(LoginRequiredMixin, View):
+    def post(self, request, pk, *args, **kwargs):
+            comment = Comment.objects.get(pk=pk)
+
+            # checking if comment is already liked by the user
+            is_like = False
+
+            for like in comment.likes.all():
+                if like == request.user:
+                    is_like = True
+                    break
+            
+            # removing like if already liked
+            if is_like:
+                comment.likes.remove(request.user)
+
+            # logic for adding dislike
+            is_dislike = False
+
+            for dislike in comment.dislikes.all():
+                if dislike == request.user:
+                    is_dislike = True
+                    break
+
+            if not is_dislike:
+                comment.dislikes.add(request.user)
+
+            if is_dislike:
+                comment.dislikes.remove(request.user)
+
+            next = request.POST.get('next', '/')
+            return HttpResponseRedirect(next)
 
 # view for editing a comment
 class CommentEditView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
