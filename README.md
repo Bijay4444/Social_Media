@@ -1,7 +1,6 @@
 #Practice Project building Social_Media
 # S_Media - Personal Project
 
-![App Logo](link_to_app_logo.png)
 
 ## Overview
 
