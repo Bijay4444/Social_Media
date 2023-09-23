@@ -34,4 +34,7 @@ urlpatterns = [
     path('profile/<int:pk>/followers/add', views.AddFollower.as_view(), name='add_follower'),
     path('profile/<int:pk>/followers/remove', views.RemoveFollower.as_view(), name='remove_follower'),
     path('search/', views.UserSearch.as_view(), name='profile_search'),
+    path('notification/<int:notification_pk>/post/<int:post_pk>',  views.PostNotification.as_view(), name='post_notification'),
+    path('notification/<int:notification_pk>/profile/<int:profile_pk>', views.FollowNotification.as_view(), name='follow_notification'),
+    path('notification/delete/<int:notification_pk>', views.RemoveNotification.as_view(), name='notification_delete'),
 ]
