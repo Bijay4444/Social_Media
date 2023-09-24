@@ -4,7 +4,7 @@
 
 ## Overview
 
-S_Media is a social media web application developed with Django. It allows users to connect, share posts, like and comment on them, and much more.
+S_Media is a social media web application developed with Django. This is a personal project built by me to have a better understanding of full-stack application development using Django and some frontend tools.  It allows users to connect, share posts, like and comment on them, and more.
 
 ## Table of Contents
 
