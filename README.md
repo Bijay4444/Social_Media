@@ -27,17 +27,19 @@ S_Media is a social media web application developed with Django. This is a perso
 - Create and share posts
 - Like and comment on posts
 - Reply to comments
-- ...
+- Get Notifications
 
 ## Getting Started
 
 Follow these instructions to set up and run the S_Media app on your local machine.
 
-### Prerequisites
+### Prerequisites(Are listed on requirements.txt file) 
 
 - Python (version x.x.x)
 - Django (version x.x.x)
-- ...
+- crispy_forms
+- crispy_bootstrap5
+- allauth
 
 ### Installation
 
