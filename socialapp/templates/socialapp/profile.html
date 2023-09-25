@@ -13,7 +13,7 @@
             <div class=" text-center ">
 
           
-                <img src="{{ profile.picture.url }}" class="rounded" width="100" height="100" />
+                <img src="{{ profile.profile_pic.url }}" class="rounded" width="100" height="100" />
             
                 {% if profile.name %}
                 <h3 class="py-4">{{ profile.name }}
@@ -78,14 +78,18 @@
         <div class="col-md-8 col-sm-12 border-bottom">
             <div>
                 <a href="{% url 'profile' post.author.profile.pk %}">
-                <img class="rounded-circle post-img" src="{{ post.author.profile.picture.url }}" alt="profile image" width="30" height="30" />
+                <img class="rounded-circle post-img" src="{{ post.author.profile.profile_pic.url }}" alt="profile image" width="30" height="30" />
                 </a>
                 <p class= "post-text">
                     <a class= "text-primary post-link" href = "{% url 'profile' post.author.profile.pk %}"
                 >@{{ post.author }}</a> {{ post.created_at }}
             </p>
             </div>
-             <div class="position-relative">   
+             <div class="position-relative">
+                {% if post.image %}
+                    <img class="post-image" src="{{ post.image.url }}" alt="post image" />
+                {% endif %}
+               
                 <p>{{ post.content }}</p>
                 <a href="{% url 'post_detail' post.pk %}" class="stretched-link"> <a/>
             </div>
