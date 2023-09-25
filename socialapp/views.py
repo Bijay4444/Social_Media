@@ -26,8 +26,11 @@ class PostListView(LoginRequiredMixin, View):
         return render(request, 'socialapp/post_list.html', context)
 
     def post(self, request, *args, **kwargs):
-        posts = Post.objects.all().order_by('-created_at')
-        form = PostForm(request.POST)
+        logged_in_user = request.user
+        posts = Post.objects.filter(
+                author__profile__followers__in=[logged_in_user.id]
+            ).order_by('-created_at')
+        form = PostForm(request.POST, request.FILES)
 
         if form.is_valid():
             new_post = form.save(commit=False)
@@ -407,4 +410,4 @@ class RemoveNotification(View):
         
         notification.save()
 
-        return redirect('post_list')
+        return HttpResponse('Success', content_type='text/plain')

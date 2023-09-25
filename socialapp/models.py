@@ -8,6 +8,7 @@ from django.conf import settings
 # Create your models here.
 class Post(models.Model):
     content = models.TextField()
+    image = models.ImageField(upload_to='uploads/post_pictures', blank=True, null=True)
     created_at = models.DateTimeField(default=timezone.now)
     author = models.ForeignKey(User, on_delete=models.CASCADE)
     likes = models.ManyToManyField(User, related_name='likes', blank=True)

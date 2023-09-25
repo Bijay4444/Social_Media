@@ -21,9 +21,17 @@
     margin-right: 1rem;
 }
 
+.post-image{
+	max-width: 100%;
+	height: auto;
+	border-radius: 10px;
+	margin-bottom: 10px;
+}
+
 .child-cmt {
 	margin-left: 4rem;
 }
+
 .notification-badge {
 	transition: 0.3s;
 }
@@ -34,20 +42,25 @@
 	transition: 0.3s;
 }
 
+/* Styles for the dropdown */
 .dropdown {
 	position: relative;
 	display: inline-block;
 }
 
+/* Styles for the notification container */
 .dropdown-content {
 	position: absolute;
 	background-color: #f1f1f1;
-	min-width: 350px;
+	min-width: 300px;
 	box-shadow: 0px 8px 8px 0px rgba(0,0,0,0.2);
 	z-index: 1;
 	font-size: 0.9rem;
+	overflow-y: auto; /* Enable vertical scrolling if needed */
+    max-height: 300px; /* Set a maximum height for scrolling */
 }
 
+/* Styles for notification links */
 .dropdown-content a {
 	color: #000;
 	padding: 12px 16px;
@@ -59,11 +72,13 @@
 	background-color: #ddd;
 }
 
+/* Styles for individual notification items */
 .dropdown-item-parent {
 	position: relative;
 	display: block;
 }
 
+/* Styles for the close button on notifications */
 .dropdown-item-close {
 	position: absolute;
 	top: 0;

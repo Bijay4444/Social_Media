@@ -13,7 +13,7 @@
             <div class="col-md-5 col-sm-12 border-bottom position-relative">
                 <div>
                     <a href="{% url 'profile' profile.pk %}">
-                    <img class="rounded-circle post-img" src="{{ profile.picture.url }}" alt="profile image" width="30" height="30" />
+                    <img class="rounded-circle post-img" src="{{ profile.profile_pic.url }}" alt="profile image" width="30" height="30" />
                     </a>
                     <p class= "post-text">
                         <a class= "text-primary post-link" href = "{% url 'profile' profile.pk %}"
