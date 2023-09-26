@@ -17,7 +17,6 @@ S_Media is a social media web application developed with Django. This is a perso
   - [Posting](#posting)
   - [Interactions](#interactions)
 - [Contributing](#contributing)
-- [License](#license)
 - [Contact](#contact)
 
 ## Features
