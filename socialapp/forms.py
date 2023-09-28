@@ -25,3 +25,6 @@ class CommentForm(forms.ModelForm):
     class Meta:
         model = Comment
         fields = ['content']
+
+class ThreadForm(forms.Form):
+    username = forms.CharField(label='', max_length=100)
