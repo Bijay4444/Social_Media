@@ -61,7 +61,7 @@ def create_user_profile(sender, instance, created, **kwargs):
 def save_user_profile(sender, instance, **kwargs):
     instance.profile.save()
     
-#view for notifications
+#models for notifications
 class Notification(models.Model):
     #1 = like, 2 = comment, 3 = follow
     notification_type = models.IntegerField()
@@ -72,3 +72,17 @@ class Notification(models.Model):
     date = models.DateTimeField(default=timezone.now)
     user_has_seen = models.BooleanField(default=False)
     
+#models for direct messages
+class ThreadModel(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='+')
+    receiver = models.ForeignKey(User, on_delete=models.CASCADE, related_name='+')
+    # + is getting rid of reverse relation/mapping
+
+class MessageModel(models.Model):
+    thread = models.ForeignKey(ThreadModel, on_delete=models.CASCADE, related_name='+', blank=True, null=True)
+    sender = models.ForeignKey(User, on_delete=models.CASCADE, related_name='+')
+    receiver = models.ForeignKey(User, on_delete=models.CASCADE, related_name='+')
+    body = models.CharField(max_length=2000)
+    image = models.ImageField(upload_to='uploads/message_photos', blank=True, null=True)
+    date = models.DateTimeField(default=timezone.now)
+    is_read = models.BooleanField(default=False)
