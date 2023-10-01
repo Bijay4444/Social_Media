@@ -56,21 +56,19 @@
             <li><a class="dropdown-item" href="{% url 'profile' request.user.profile.pk %}">Profile</a></li>
             <li>
               <a class="dropdown-item" href="{% url 'account_logout' %}"
-                >Sign Out</a
-              >
+                >Sign Out</a>
             </li>
           </ul>
         </div>
         
         <div class="nav-item inbox-icon-container">
-          <a class="inbox-icon" href="{% url 'inbox' %}"
-            ><i class="fa-solid fa-inbox"></i
-          ></a>
+          <a class="inbox-icon" href="{% url 'inbox' %}">
+            <i class="fa-solid fa-paper-plane"></i>
+          </a>
         </div>
 
-        <div class="nav-item">
+        <div class="nav-item pd-3">
           {% show_notifications %}
-        </div>
         {% endif %}
       </div>
     </div>
