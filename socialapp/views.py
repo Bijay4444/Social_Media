@@ -5,8 +5,8 @@ from django.contrib.auth.models import User
 from django.http import HttpResponseRedirect, HttpResponse
 from django.contrib.auth.mixins import UserPassesTestMixin, LoginRequiredMixin
 from django.views import View
-from .models import Post, Comment, UserProfile, Notification, ThreadModel
-from .forms import PostForm, CommentForm, ThreadForm
+from .models import Post, Comment, UserProfile, Notification, ThreadModel, MessageModel
+from .forms import PostForm, CommentForm, ThreadForm, MessageForm
 from django.views.generic import UpdateView, DeleteView
 
 # View for the home page showing posts
@@ -458,3 +458,34 @@ class CreateThread(View):
                 return redirect('thread', pk=thread.pk)
         except:
             return redirect('create-thread')
+        
+class ThreadView(View):
+    def get(self, request, pk, *args, **kwargs):
+        form = MessageForm()
+        thread = ThreadModel.objects.get(pk=pk)
+        message_list = MessageModel.objects.filter(thread__pk__contains=pk)
+        context = {
+            'thread': thread,
+            'form': form,
+            'message_list': message_list
+        }
+
+        return render(request, 'socialapp/thread.html', context)
+
+class CreateMessage(View):
+    def post(self, request, pk, *args, **kwargs):
+        thread = ThreadModel.objects.get(pk=pk)
+        if thread.receiver == request.user:
+            receiver = thread.user
+        else:
+            receiver = thread.receiver
+
+        message = MessageModel(
+            thread=thread,
+            sender_user=request.user,
+            receiver_user=receiver,
+            body=request.POST.get('message')
+        )
+
+        message.save()
+        return redirect('thread', pk=pk)
