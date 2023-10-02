@@ -27,18 +27,40 @@
 
 	{% for message in message_list %}
 	<div class="row">
-		<div class="col-md-12 my-1">
-			{% if message.sender_user == request.user %}
-				<div class="my-3" style="background-color: #f3f3f3; border-radius: 30px; padding: 10px 25px; width: 25%; float: left;">
-					<p>{{ message.body }}</p>
-				</div>
-			{% elif message.receiver_user == request.user %}
-				<div class="my-3" style="background-color: rgb(1, 196, 255); color: #fff; border-radius: 30px; padding: 10px 25px; width: 25%; float: right;">
-					<p>{{ message.body }}</p>
-				</div>
+		{% if message.sender_user == request.user %}
+
+		<div class="col-md-12 my-1">	
+			{% if message.image %}
+			
+			{% comment %} message image {% endcomment %}
+			<div class = "ms-auto" style="margin-left:auto; margin-right:0;"> 
+				<img src="{{ message.image.url }}" style="max-width: 35%; height: auto; border-radius:10;"/>
+			</div>
 			{% endif %}
+
+			{% comment %} message body {% endcomment %}
+			<div class="my-3" style="background-color: #f3f3f3; border-radius: 30px; padding: 10px 25px; width: 35%; float: left;">
+				<p>{{ message.body }}</p>
+			</div>
 		</div>
-	</div>
+
+			{% elif message.receiver_user == request.user %}
+			<div class="col-md-12 offset-6">
+				{% if message.image %}
+			
+					{% comment %} message image {% endcomment %}
+					<div class = "ms-auto" style="max-width: 35%; height: auto; border-radius:10px;"> 
+						<img src="{{ message.image.url }}" style="width: 100px; height: 100px;"/>
+					</div>
+				{% endif %}
+
+				<div class="my-3" style="background-color: rgb(1, 196, 255); color: #fff; border-radius: 30px; padding: 10px 25px; width: 35%; ">
+					<p>{{ message.body }}</p>
+				</div>
+			</div>
+			{% endif %}
+
+		</div>
 	{% endfor %}
 
 	<div class="row">
