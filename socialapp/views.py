@@ -6,8 +6,8 @@ from django.http import HttpResponseRedirect, HttpResponse
 from django.contrib.auth.mixins import UserPassesTestMixin, LoginRequiredMixin
 from django.contrib import messages
 from django.views import View
-from .models import Post, Comment, UserProfile, Notification, ThreadModel, MessageModel
-from .forms import PostForm, CommentForm, ThreadForm, MessageForm
+from .models import Post, Comment, UserProfile, Notification, ThreadModel, MessageModel, Tag
+from .forms import PostForm, CommentForm, ThreadForm, MessageForm, ExploreForm
 from django.views.generic import UpdateView, DeleteView
 
 # View for the home page showing posts
@@ -38,12 +38,13 @@ class PostListView(LoginRequiredMixin, View):
             new_post = form.save(commit=False)
             new_post.author = request.user
             new_post.save()
+            
+            new_post.create_tags()
 
         return redirect('post_list')
 
+
 # view for detail view of a post
-
-
 class PostDetailView(LoginRequiredMixin, View):
     def get(self, request, pk, *args, **kwargs):
         post = Post.objects.get(pk=pk)
@@ -70,6 +71,8 @@ class PostDetailView(LoginRequiredMixin, View):
             new_comment.author = request.user
             new_comment.save()
 
+            new_comment.create_tags()
+            
         comments = Comment.objects.filter(post=post).order_by('-created_at')
 
         context = {
@@ -510,3 +513,47 @@ class CreateMessage(View):
         
         
         return redirect('thread', pk=pk)
+    
+class Explore(View):
+    def get(self, request, *args, **kwargs):
+        explore_form = ExploreForm()
+        query = self.request.GET.get('query')
+        tag = Tag.objects.filter(name=query).first()
+        
+        if tag:
+            posts = Post.objects.filter(tags__in=[tag]) #filtering posts by tag
+        else:
+            posts = Post.objects.all()  #if no tag is found, show all posts
+    
+        context = {
+            'tag': tag,
+            'posts': posts,
+            'explore_form': explore_form,
+        }
+        
+        return render(request, 'socialapp/explore.html', context)
+    
+    def post(self, request, *args, **kwargs):
+        explore_form = ExploreForm(request.POST)
+        
+        if explore_form.is_valid():
+            query = explore_form.cleaned_data['query']
+            tag = Tag.objects.filter(name = query).first()
+            
+            posts = None
+            
+            if tag:
+                posts = Post.objects.filter(tags__in= [tag])
+            
+            if posts:
+                context = {
+                    'tag': tag,
+                    'posts': posts,
+                }
+            else:
+                context = {
+                    'tag' : tag,
+                }
+            
+            return HttpResponseRedirect(f'/socialapp/explore?query={query}')
+        return HttpResponseRedirect('/socialapp/explore')

@@ -13,7 +13,24 @@ class Post(models.Model):
     author = models.ForeignKey(User, on_delete=models.CASCADE)
     likes = models.ManyToManyField(User, related_name='likes', blank=True)
     dislikes = models.ManyToManyField(User, related_name='dislikes', blank=True)
+    tags = models.ManyToManyField('Tag', related_name='post_tags', blank=True)
     
+    def create_tags(self):
+        for word in self.content.split():
+            if word.startswith('#'):
+                tag = Tag.objects.filter(name=word[1:]).first()
+                if tag:
+                    self.tags.add(tag.pk)
+                else:
+                    tag = Tag(name=word[1:])
+                    tag.save()
+                    self.tags.add(tag.pk)
+
+                self.save()
+                
+    class Meta:
+        ordering = ['-created_at']
+                
 class Comment(models.Model):
     content = models.TextField()
     created_at = models.DateTimeField(default=timezone.now)
@@ -23,6 +40,20 @@ class Comment(models.Model):
     dislikes = models.ManyToManyField(User, related_name='comment_dislikes', blank=True)
     parent = models.ForeignKey('self', on_delete=models.CASCADE, null=True, blank=True, related_name='+') 
     # + means that we don't need this reverse relation
+    tags = models.ManyToManyField('Tag', related_name='comment_tags', blank=True)
+    
+    def create_tags(self):
+        for word in self.content.split():
+            if word.startswith('#'):
+                tag = Tag.objects.filter(name=word[1:]).first()
+                if tag:
+                    self.tags.add(tag.pk)
+                else:
+                    tag = Tag(name=word[1:])
+                    tag.save()
+                    self.tags.add(tag.pk)
+
+                self.save()
     
     @property
     def children(self):
@@ -87,3 +118,6 @@ class MessageModel(models.Model):
     image = models.ImageField(upload_to='uploads/message_photos', blank=True, null=True)
     date = models.DateTimeField(default=timezone.now)
     is_read = models.BooleanField(default=False)
+    
+class Tag(models.Model):
+    name = models.CharField(max_length=60)

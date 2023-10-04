@@ -1,0 +1,82 @@
+{% extends 'landing/base.html' %}
+{% load crispy_forms_tags %}
+{% load static %}
+
+
+{% block content %}
+
+	<div class="container">
+	    <div class="row mt-3">
+            <div class="col-md-5 col-sm-6">
+                <a href="{% url 'post_list' %}" class="btn"><i class="fa-solid fa-arrow-left fa-lg"></i></a>
+            </div>
+        </div>
+
+		<div class="row justify-content-center mt-3">
+			<div class="col-md-5 col-sm-12">
+				{% if tag %}
+					<h3>Explore #{{ tag.name }} Posts</h3>
+					<p class="mb-3">Most recent posts tagged with {{ tag.name }}</p>
+				{% else %}
+					<h3>Explore Posts</h3>
+					<p class="mb-3">Explore tags to find new posts</p>
+				{% endif %}
+
+				<form method="POST" class="mb-5">
+					{% csrf_token %}
+					{{ explore_form | crispy }}
+				</form>
+			</div>
+		</div>
+
+        {% for post in posts %}
+        <div class="row justify-content-center mt-3">
+            <div class="col-md-5 col-sm-12 border-bottom position-relative">
+                <div>
+                    <a href="{% url 'profile' post.author.profile.pk %}">
+                        {% if post.author.profile.profile_pic %}
+                          <img class="rounded-circle post-img" src="{{ post.author.profile.profile_pic.url }}" alt="profile image" width="30" height="30" />
+                        {% else %}
+                            <!--  A fallback image or some alternative content -->
+                            <img class="rounded-circle post-img" src="{% static 'media/uploads/profile_pictures/default.jpg' %}" alt="default image" width="30" height="30" />
+                        {% endif %}
+                        
+                    </a>
+                    <p class= "post-text">
+                        <a class= "text-primary post-link" href = "{% url 'profile' post.author.profile.pk %}"
+                    >@{{ post.author }}</a> {{ post.created_at }}
+                </p>
+                </div>
+                 <div class="position-relative">
+                    {% if post.image %}
+                        <img class="post-image" src="{{ post.image.url }}" alt="post image" />
+                    {% endif %}
+                    <div class="body" style="text-decoration: none;">
+                        <p>{{ post.content }}</p>
+                    </div>
+                    <a href="{% url 'post_detail' post.pk %}" class="stretched-link"> <a/>
+                </div>
+    
+                {% comment %} likes and dislikes views {% endcomment %}
+                <div class="d-flex flex-row">
+                    <form method="POST" action="{% url 'like' post.pk %}">
+                        {% csrf_token %}
+                        <input type="hidden" name="next" value="{{ request.path }}">
+                        <button class = "remove-default-btn" type="submit">
+                            <i class="far fa-thumbs-up"> <span>{{ post.likes.all.count }}</span></i>
+                        </button>
+                    </form>
+    
+                    <form method="POST" action="{% url 'dislike' post.pk %}">
+                        {% csrf_token %}
+                        <input type="hidden" name="next" value="{{ request.path }}">
+                        <button class="remove-default-btn" type="submit">
+                            <i class="far fa-thumbs-down"> <span>{{ post.dislikes.all.count }}</span></i>
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+</div>
+{% endblock content %} 
