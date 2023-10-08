@@ -92,18 +92,7 @@ def create_user_profile(sender, instance, created, **kwargs):
 def save_user_profile(sender, instance, **kwargs):
     instance.profile.save()
     
-#models for notifications
-class Notification(models.Model):
-    #1 = like, 2 = comment, 3 = follow
-    notification_type = models.IntegerField()
-    to_user = models.ForeignKey(User, related_name='notification_to', on_delete=models.CASCADE)
-    from_user = models.ForeignKey(User, related_name='notification_from', on_delete=models.CASCADE, null=True)
-    post = models.ForeignKey(Post, on_delete=models.CASCADE, related_name='+', blank=True, null=True)
-    comment = models.ForeignKey(Comment, on_delete=models.CASCADE, related_name='+', blank=True, null=True)
-    thread = models.ForeignKey('ThreadModel', on_delete=models.CASCADE, related_name='+', blank=True, null=True)
-    date = models.DateTimeField(default=timezone.now)
-    user_has_seen = models.BooleanField(default=False)
-    
+
 #models for direct messages
 class ThreadModel(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='+')
@@ -121,3 +110,16 @@ class MessageModel(models.Model):
     
 class Tag(models.Model):
     name = models.CharField(max_length=60)
+
+#models for notifications
+class Notification(models.Model):
+    #1 = like, 2 = comment, 3 = follow, 4 = message
+    notification_type = models.IntegerField()
+    to_user = models.ForeignKey(User, related_name='notification_to', on_delete=models.CASCADE)
+    from_user = models.ForeignKey(User, related_name='notification_from', on_delete=models.CASCADE, null=True)
+    post = models.ForeignKey(Post, on_delete=models.CASCADE, related_name='+', blank=True, null=True)
+    comment = models.ForeignKey(Comment, on_delete=models.CASCADE, related_name='+', blank=True, null=True)
+    thread = models.ForeignKey(ThreadModel, on_delete=models.CASCADE, related_name='+', blank=True, null=True)
+    date = models.DateTimeField(default=timezone.now)
+    user_has_seen = models.BooleanField(default=False)
+    
