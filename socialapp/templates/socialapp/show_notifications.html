@@ -12,7 +12,7 @@
                 <div class="dropdown-item-parent">
                     <a
                         href="{% url 'post_notification' notification.pk notification.post.pk %}"
-                        >@{{ notification.from_user }} liked your post</a
+                        >@{{ notification.from_user }} liked your post </a
                     >
                     <span
                         class="dropdown-item-close"
@@ -24,7 +24,7 @@
                 <div class="dropdown-item-parent">
                     <a
                         href="{% url 'post_notification' notification.pk notification.post.pk %}"
-                        >@{{ notification.from_user }} commented on your post</a
+                        >@{{ notification.from_user }} commented on your post </a
                     >
                     <span
                         class="dropdown-item-close"
@@ -38,7 +38,7 @@
                     <div class="dropdown-item-parent">
                         <a
                             href="{% url 'post_notification' notification.pk notification.comment.post.pk %}"
-                            >@{{ notification.from_user }} liked your comment</a
+                            >@{{ notification.from_user }} liked your comment </a
                         >
                         <span
                             class="dropdown-item-close"
@@ -50,7 +50,7 @@
                     <div class="dropdown-item-parent">
                         <a
                             href="{% url 'post_notification' notification.pk notification.comment.post.pk %}"
-                            >@{{ notification.from_user }} replied to your comment</a
+                            >@{{ notification.from_user }} replied to your comment </a
                         >
                         <span
                             class="dropdown-item-close"
@@ -63,7 +63,7 @@
                 <div class="dropdown-item-parent">
                     <a
                         href="{% url 'thread-notification' notification.pk notification.thread.pk %}"
-                        >@{{ notification.from_user }} sent you a message</a
+                        >@{{ notification.from_user }} sent you a message </a
                     >
                     <span
                         class="dropdown-item-close"
@@ -75,7 +75,7 @@
                 <div class="dropdown-item-parent">
                     <a
                         href="{% url 'follow_notification' notification.pk notification.from_user.profile.pk %}"
-                        >@{{ notification.from_user }} has started following you</a
+                        >@{{ notification.from_user }} has started following you </a
                     >
                     <span
                         class="dropdown-item-close"
